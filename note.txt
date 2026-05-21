@@ -1,3 +1,9 @@
 bs.bid.story@gmail.com
 C:\Users\hesham\Desktop\products
  
+
+ https://github.com/bsbidstory-oss/products.git
+
+ 
+
+Deploy keys  Title=product Key=hgh103hgh103
