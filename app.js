@@ -22,15 +22,4 @@ function getBaseUrl(collection) {
   return `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/${collection}`; 
 }
 
-// Global App State
-let appState = {
-  isFirestoreMode: true,
-  activeTab: "products", // "products" or "ratings"
-  products: [],
-  ratings: [],
-  activeCategoryFilter: "all",
-  editingProductId: null,
-  editingRatingId: null,
-  isFetchingProducts: false,
-  isFetchingRatings: false
-};
+
