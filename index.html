@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suez Bazaar - Products Management Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="rtl"> <!-- Arabic/RTL first by default since communication is Arabic -->
+  
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header class="glass-panel">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="app-title">سوق السويس - إدارة المنتجات</h1>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Suez Bazaar Rest DB Manager</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="lang-toggle-btn">English</button>
+        <button class="btn btn-primary" id="add-product-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          <span id="add-product-text">إضافة منتج جديد</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Dashboard Grid -->
+    <div class="stats-grid">
+      <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: rgba(0, 242, 254, 0.1); color: #00F2FE;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="stat-label-total">إجمالي المنتجات</span>
+          <span class="stat-value" id="stat-total">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: rgba(102, 187, 106, 0.1); color: #66BB6A;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="stat-label-approved">المنتجات المعتمدة</span>
+          <span class="stat-value" id="stat-approved">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: rgba(255, 82, 82, 0.1); color: #FF5252;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="stat-label-outofstock">المنتجات المنتهية</span>
+          <span class="stat-value" id="stat-outofstock">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card glass-panel">
+        <div class="stat-icon" style="background: rgba(255, 167, 38, 0.1); color: #FFA726;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label" id="stat-label-premium">أعلى سعر متوفر</span>
+          <span class="stat-value" id="stat-highest-price">0 EGP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Panel -->
+    <section class="control-panel glass-panel">
+      <div class="search-filter-row">
+        
+        <!-- Search Input -->
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input type="text" class="search-input" id="search-input" placeholder="بحث باسم المنتج، الوصف، أو الرمز الفريد...">
+        </div>
+
+        <!-- Filter by Category -->
+        <select class="select-input" id="category-filter">
+          <option value="">جميع الأقسام</option>
+          <option value="1">👕 الملابس والموضة</option>
+          <option value="2">🍔 المطاعم والمأكولات</option>
+          <option value="3">💻 إلكترونيات وأجهزة</option>
+          <option value="4">💄 التجميل والمكياج</option>
+          <option value="12">🐱 مستلزمات الحيوانات</option>
+          <option value="13">💍 الإسسوارات والمشغولات</option>
+          <option value="16">🏠 العقارات والأراضي</option>
+          <option value="17">🎁 الهدايا والورود</option>
+          <option value="44">✨ عطور أوريفليم</option>
+          <option value="45">🌸 عطور أيفون وتجميل</option>
+        </select>
+
+        <!-- Filter by Approval -->
+        <select class="select-input" id="approved-filter">
+          <option value="">كل الحالات</option>
+          <option value="approved">معتمد</option>
+          <option value="pending">قيد المراجعة</option>
+        </select>
+
+        <!-- Sort By -->
+        <select class="select-input" id="sort-select">
+          <option value="price-asc">السعر: من الأقل للأعلى</option>
+          <option value="price-desc">السعر: من الأعلى للأقل</option>
+          <option value="quantity-desc">الكمية المتوفرة</option>
+          <option value="name-asc">الاسم (أبجدي)</option>
+        </select>
+
+      </div>
+    </section>
+
+    <!-- Products Grid -->
+    <main class="products-grid" id="products-container">
+      <!-- Generated dynamically -->
+    </main>
+
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" id="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal-container glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title-text">إضافة منتج جديد</h3>
+        <button class="close-btn" id="close-modal-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="product-form" onsubmit="return false;">
+        <div class="form-grid">
+          
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-prod-name">اسم المنتج *</label>
+            <input type="text" class="form-input" id="form-productName" required>
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-prod-key">رمز المنتج الفريد (Product Key) *</label>
+            <input type="text" class="form-input" id="form-product_key" required placeholder="مثال: abcxyz">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-user-key">رمز المستخدم المالك (User Key) *</label>
+            <input type="text" class="form-input" id="form-user_key" required>
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-prod-price">سعر البيع (EGP) *</label>
+            <input type="number" step="0.01" class="form-input" id="form-product_price" required>
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-orig-price">السعر الأصلي (EGP)</label>
+            <input type="number" step="0.01" class="form-input" id="form-original_price">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-real-price">السعر الفعلي المخفض (EGP)</label>
+            <input type="number" step="0.01" class="form-input" id="form-realPrice">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-prod-qty">الكمية *</label>
+            <input type="number" class="form-input" id="form-product_quantity" required>
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-main-cat">القسم الرئيسي *</label>
+            <select class="select-input" id="form-MainCategory" required>
+              <option value="1">الملابس والموضة (1)</option>
+              <option value="2">المطاعم والمأكولات (2)</option>
+              <option value="3">إلكترونيات وأجهزة (3)</option>
+              <option value="4">التجميل والمكياج (4)</option>
+              <option value="12">مستلزمات الحيوانات (12)</option>
+              <option value="13">الإكسسوارات والمشغولات (13)</option>
+              <option value="16">العقارات والأراضي (16)</option>
+              <option value="17">الهدايا والورود (17)</option>
+              <option value="44">عطور أوريفليم (44)</option>
+              <option value="45">عطور أيفون وتجميل (45)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-sub-cat">القسم الفرعي</label>
+            <input type="number" class="form-input" id="form-SubCategory" value="1">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-img-name">أسماء الصور (ImageName)</label>
+            <input type="text" class="form-input" id="form-ImageName" placeholder="مثال: img1.webp,img2.webp">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-img-idx">مؤشر الصورة الرئيسية</label>
+            <input type="number" class="form-input" id="form-ImageIndex" value="1">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-service-type">نوع الخدمة (Service Type)</label>
+            <input type="number" class="form-input" id="form-serviceType" value="0">
+          </div>
+
+          <div>
+            <label class="form-label" id="lbl-heavy-load">ثقل الشحن (Heavy Load)</label>
+            <input type="number" step="0.1" class="form-input" id="form-heavyLoad" value="0">
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+            <input type="checkbox" id="form-is_approved" style="width: 18px; height: 18px; cursor: pointer;">
+            <label class="form-label" for="form-is_approved" style="margin-bottom: 0; cursor: pointer;" id="lbl-is-approved">منتج معتمد ونشط</label>
+          </div>
+
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-prod-desc">وصف المنتج</label>
+            <textarea class="form-input form-textarea" id="form-product_description"></textarea>
+          </div>
+
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-user-msg">رسالة التاجر للعميل</label>
+            <input type="text" class="form-input" id="form-user_message">
+          </div>
+
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-user-note">ملاحظات داخلية</label>
+            <input type="text" class="form-input" id="form-user_note">
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-form-btn">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="save-form-btn">حفظ وتأكيد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ratings Modal -->
+  <div class="modal-overlay" id="ratings-modal">
+    <div class="modal-container glass-panel">
+      <div class="modal-header">
+        <h3 class="modal-title" id="ratings-modal-title">تقييمات المنتج</h3>
+        <button class="close-btn" id="close-ratings-modal-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Ratings List -->
+      <div class="ratings-list" id="modal-ratings-list">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Add Rating Form -->
+      <form id="rating-form" onsubmit="return false;" style="border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem;">
+        <h4 style="margin-bottom: 1rem; color: var(--text-bright);" id="lbl-add-review">أضف تقييمًا جديدًا</h4>
+        <div class="form-grid">
+          <div>
+            <label class="form-label" id="lbl-rating-actor">اسم المقيم *</label>
+            <input type="text" class="form-input" id="rating-actor-name" required placeholder="الاسم الكريم">
+          </div>
+          <div>
+            <label class="form-label" id="lbl-rating-actor-key">رمز المقيم الفريد *</label>
+            <input type="text" class="form-input" id="rating-actor-user-key" required placeholder="مثال: usrabc">
+          </div>
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-rating-score">عدد النجوم *</label>
+            <div class="stars-input-container" id="stars-input-container">
+              <span class="star-option selected" data-value="1">★</span>
+              <span class="star-option selected" data-value="2">★</span>
+              <span class="star-option selected" data-value="3">★</span>
+              <span class="star-option selected" data-value="4">★</span>
+              <span class="star-option selected" data-value="5">★</span>
+            </div>
+          </div>
+          <div class="form-group-full">
+            <label class="form-label" id="lbl-rating-note">التعليق</label>
+            <textarea class="form-input" id="rating-note" style="min-height: 70px;" placeholder="اكتب مراجعتك هنا..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="border: none; padding-top: 0;">
+          <button type="submit" class="btn btn-primary" id="save-rating-btn">إضافة مراجعة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Core Dashboard Orchestrator Module -->
+  <script type="module">
+    import { getProducts, saveProduct, deleteProduct, getProductRatings, addProductRating } from './app.js';
+
+    // R2 image server base URL
+    const R2_BASE = "https://pub-e828389e2f1e484c89d8fb652c540c12.r2.dev";
+
+    // Application state
+    let state = {
+      products: [],
+      currentLanguage: 'ar', // 'ar' or 'en'
+      activeProduct: null, // Product being edited or having reviews viewed
+      selectedRatingScore: 5 // Selected star count for new ratings
+    };
+
+    // Category dictionary with localized names
+    const CATEGORIES = {
+      1: { en: "Fashion & Clothes", ar: "الملابس والموضة", icon: "👕" },
+      2: { en: "Food & Restaurants", ar: "المطاعم والمأكولات", icon: "🍔" },
+      3: { en: "Electronics & Tech", ar: "إلكترونيات وأجهزة", icon: "💻" },
+      4: { en: "Beauty & Makeup", ar: "التجميل والمكياج", icon: "💄" },
+      12: { en: "Pets Care", ar: "مستلزمات الحيوانات الأليفة", icon: "🐱" },
+      13: { en: "Accessories & Crafts", ar: "الإكسسوارات والمشغولات", icon: "💍" },
+      16: { en: "Real Estate", ar: "العقارات والأراضي", icon: "🏠" },
+      17: { en: "Gifts & Flowers", ar: "الهدايا والورود", icon: "🎁" },
+      44: { en: "Oriflame Products", ar: "منتجات أوريفليم", icon: "✨" },
+      45: { en: "Avon Products", ar: "منتجات أيفون", icon: "🌸" }
+    };
+
+    // UI Translation Resource Dictionary
+    const TRANSLATIONS = {
+      ar: {
+        appTitle: "سوق السويس - لوحة تحكم المنتجات",
+        totalLabel: "إجمالي المنتجات",
+        approvedLabel: "المنتجات المعتمدة",
+        outofstockLabel: "المنتجات المنتهية",
+        highestLabel: "أعلى سعر متوفر",
+        searchPlaceholder: "بحث باسم المنتج، الوصف، أو الرمز الفريد...",
+        addProduct: "إضافة منتج جديد",
+        editProduct: "تعديل المنتج",
+        deleteConfirm: "هل أنت متأكد من رغبتك في حذف هذا المنتج نهائيًا؟",
+        stars: "نجوم",
+        price: "السعر",
+        stock: "الكمية المتوفرة",
+        outOfStock: "منتهي",
+        approved: "معتمد",
+        pending: "قيد المراجعة",
+        saveSuccess: "تم حفظ المنتج بنجاح!",
+        deleteSuccess: "تم حذف المنتج بنجاح!",
+        ratingSuccess: "تمت إضافة التقييم بنجاح!",
+        loadError: "فشل تحميل البيانات من السيرفر.",
+        saveError: "فشل حفظ البيانات.",
+        deleteError: "فشل حذف المنتج.",
+        allCategories: "جميع الأقسام",
+        allStatuses: "كل الحالات",
+        sortPriceAsc: "السعر: من الأقل للأعلى",
+        sortPriceDesc: "السعر: من الأعلى للأقل",
+        sortQtyDesc: "الكمية المتوفرة",
+        sortNameAsc: "الاسم (أبجدي)",
+        ratingsTitle: "تقييمات ومراجعات المنتج",
+        noRatings: "لا توجد تقييمات لهذا المنتج حتى الآن.",
+        addReview: "أضف تقييمًا جديدًا",
+        formName: "اسم المنتج *",
+        formKey: "رمز المنتج الفريد (Product Key) *",
+        formUserKey: "رمز المستخدم المالك (User Key) *",
+        formPrice: "سعر البيع (EGP) *",
+        formOrigPrice: "السعر الأصلي (EGP)",
+        formRealPrice: "السعر الفعلي المخفض (EGP)",
+        formQty: "الكمية *",
+        formCat: "القسم الرئيسي *",
+        formSubCat: "القسم الفرعي",
+        formImgName: "أسماء الصور (ImageName)",
+        formImgIdx: "مؤشر الصورة الرئيسية",
+        formService: "نوع الخدمة (Service Type)",
+        formHeavy: "ثقل الشحن (Heavy Load)",
+        formApproved: "منتج معتمد ونشط",
+        formDesc: "وصف المنتج",
+        formUserMsg: "رسالة التاجر للعميل",
+        formUserNote: "ملاحظات داخلية",
+        btnCancel: "إلغاء",
+        btnConfirm: "حفظ وتأكيد",
+        lblActor: "اسم المقيم *",
+        lblActorKey: "رمز المقيم الفريد *",
+        lblStars: "عدد النجوم *",
+        lblNote: "التعليق",
+        btnAddReviewSubmit: "إضافة مراجعة"
+      },
+      en: {
+        appTitle: "Suez Bazaar - Products Dashboard",
+        totalLabel: "Total Products",
+        approvedLabel: "Approved Products",
+        outofstockLabel: "Out of Stock",
+        highestLabel: "Highest Price",
+        searchPlaceholder: "Search by name, description, key...",
+        addProduct: "Add New Product",
+        editProduct: "Edit Product",
+        deleteConfirm: "Are you sure you want to permanently delete this product?",
+        stars: "stars",
+        price: "Price",
+        stock: "In Stock",
+        outOfStock: "Out of Stock",
+        approved: "Approved",
+        pending: "Pending",
+        saveSuccess: "Product saved successfully!",
+        deleteSuccess: "Product deleted successfully!",
+        ratingSuccess: "Rating added successfully!",
+        loadError: "Failed to load data from server.",
+        saveError: "Failed to save data.",
+        deleteError: "Failed to delete product.",
+        allCategories: "All Categories",
+        allStatuses: "All Statuses",
+        sortPriceAsc: "Price: Low to High",
+        sortPriceDesc: "Price: High to Low",
+        sortQtyDesc: "Available Stock",
+        sortNameAsc: "Name (A-Z)",
+        ratingsTitle: "Product Reviews & Ratings",
+        noRatings: "No reviews for this product yet.",
+        addReview: "Add a New Review",
+        formName: "Product Name *",
+        formKey: "Product Key *",
+        formUserKey: "Owner User Key *",
+        formPrice: "Sale Price (EGP) *",
+        formOrigPrice: "Original Price (EGP)",
+        formRealPrice: "Real Price (EGP)",
+        formQty: "Quantity *",
+        formCat: "Main Category *",
+        formSubCat: "Sub Category",
+        formImgName: "Image Names (ImageName)",
+        formImgIdx: "Primary Image Index",
+        formService: "Service Type",
+        formHeavy: "Heavy Load",
+        formApproved: "Approved and Active Product",
+        formDesc: "Product Description",
+        formUserMsg: "Merchant message to customer",
+        formUserNote: "Internal Notes",
+        btnCancel: "Cancel",
+        btnConfirm: "Save & Confirm",
+        lblActor: "Reviewer Name *",
+        lblActorKey: "Reviewer User Key *",
+        lblStars: "Star Rating *",
+        lblNote: "Review Message",
+        btnAddReviewSubmit: "Add Review"
+      }
+    };
+
+    // DOM Elements Cache
+    const el = {
+      productsContainer: document.getElementById('products-container'),
+      loadingSpinner: document.getElementById('loading-spinner'),
+      toastContainer: document.getElementById('toast-container'),
+      
+      // Stats
+      statTotal: document.getElementById('stat-total'),
+      statApproved: document.getElementById('stat-approved'),
+      statOutOfStock: document.getElementById('stat-outofstock'),
+      statHighestPrice: document.getElementById('stat-highest-price'),
+      
+      // Filter & Search Controls
+      searchInput: document.getElementById('search-input'),
+      categoryFilter: document.getElementById('category-filter'),
+      approvedFilter: document.getElementById('approved-filter'),
+      sortSelect: document.getElementById('sort-select'),
+      
+      // Add/Edit Product Modal
+      productModal: document.getElementById('product-modal'),
+      productForm: document.getElementById('product-form'),
+      modalTitleText: document.getElementById('modal-title-text'),
+      addProductBtn: document.getElementById('add-product-btn'),
+      closeModalBtn: document.getElementById('close-modal-btn'),
+      cancelFormBtn: document.getElementById('cancel-form-btn'),
+      
+      // Ratings Modal
+      ratingsModal: document.getElementById('ratings-modal'),
+      closeRatingsModalBtn: document.getElementById('close-ratings-modal-btn'),
+      modalRatingsList: document.getElementById('modal-ratings-list'),
+      ratingForm: document.getElementById('rating-form'),
+      starOptions: document.querySelectorAll('.star-option'),
+      
+      // Language Elements
+      langToggleBtn: document.getElementById('lang-toggle-btn'),
+      appTitle: document.getElementById('app-title'),
+      statLabelTotal: document.getElementById('stat-label-total'),
+      statLabelApproved: document.getElementById('stat-label-approved'),
+      statLabelOutOfStock: document.getElementById('stat-label-outofstock'),
+      statLabelPremium: document.getElementById('stat-label-premium'),
+      addProductText: document.getElementById('add-product-text')
+    };
+
+    // Initialize application
+    async function init() {
+      setupEventListeners();
+      applyLanguage(state.currentLanguage);
+      await loadDashboardData();
+    }
+
+    // Event Listeners Registration
+    function setupEventListeners() {
+      // Language Toggle
+      el.langToggleBtn.addEventListener('click', () => {
+        state.currentLanguage = state.currentLanguage === 'ar' ? 'en' : 'ar';
+        applyLanguage(state.currentLanguage);
+        renderProducts();
+      });
+
+      // Filter events
+      el.searchInput.addEventListener('input', renderProducts);
+      el.categoryFilter.addEventListener('change', renderProducts);
+      el.approvedFilter.addEventListener('change', renderProducts);
+      el.sortSelect.addEventListener('change', renderProducts);
+
+      // Modal Triggers
+      el.addProductBtn.addEventListener('click', () => openProductModal(null));
+      el.closeModalBtn.addEventListener('click', closeProductModal);
+      el.cancelFormBtn.addEventListener('click', closeProductModal);
+      el.closeRatingsModalBtn.addEventListener('click', closeRatingsModal);
+
+      // Save/Submit handlers
+      el.productForm.addEventListener('submit', handleProductSubmit);
+      el.ratingForm.addEventListener('submit', handleRatingSubmit);
+
+      // Star rating click handlers
+      el.starOptions.forEach(star => {
+        star.addEventListener('click', (e) => {
+          const value = parseInt(e.target.getAttribute('data-value'), 10);
+          updateStarSelection(value);
+        });
+      });
+    }
+
+    // Toggle between English and Arabic UI text
+    function applyLanguage(lang) {
+      const trans = TRANSLATIONS[lang];
+      document.body.className = lang === 'ar' ? 'rtl' : '';
+      
+      // Text assignments
+      el.appTitle.textContent = trans.appTitle;
+      el.statLabelTotal.textContent = trans.totalLabel;
+      el.statLabelApproved.textContent = trans.approvedLabel;
+      el.statLabelOutOfStock.textContent = trans.outofstockLabel;
+      el.statLabelPremium.textContent = trans.highestLabel;
+      el.addProductText.textContent = trans.addProduct;
+      el.langToggleBtn.textContent = lang === 'ar' ? 'English' : 'العربية';
+      el.searchInput.placeholder = trans.searchPlaceholder;
+      
+      // Category translations inside select options
+      const categoryOptions = el.categoryFilter.options;
+      categoryOptions[0].textContent = trans.allCategories;
+      for(let i = 1; i < categoryOptions.length; i++) {
+        const catId = categoryOptions[i].value;
+        if(CATEGORIES[catId]) {
+          categoryOptions[i].textContent = `${CATEGORIES[catId].icon} ${CATEGORIES[catId][lang]}`;
+        }
+      }
+
+      // Dropdown localizations
+      el.approvedFilter.options[0].textContent = trans.allStatuses;
+      el.approvedFilter.options[1].textContent = trans.approved;
+      el.approvedFilter.options[2].textContent = trans.pending;
+
+      el.sortSelect.options[0].textContent = trans.sortPriceAsc;
+      el.sortSelect.options[1].textContent = trans.sortPriceDesc;
+      el.sortSelect.options[2].textContent = trans.sortQtyDesc;
+      el.sortSelect.options[3].textContent = trans.sortNameAsc;
+
+      // Labels inside forms
+      document.getElementById('lbl-prod-name').textContent = trans.formName;
+      document.getElementById('lbl-prod-key').textContent = trans.formKey;
+      document.getElementById('lbl-user-key').textContent = trans.formUserKey;
+      document.getElementById('lbl-prod-price').textContent = trans.formPrice;
+      document.getElementById('lbl-orig-price').textContent = trans.formOrigPrice;
+      document.getElementById('lbl-real-price').textContent = trans.formRealPrice;
+      document.getElementById('lbl-prod-qty').textContent = trans.formQty;
+      document.getElementById('lbl-main-cat').textContent = trans.formCat;
+      document.getElementById('lbl-sub-cat').textContent = trans.formSubCat;
+      document.getElementById('lbl-img-name').textContent = trans.formImgName;
+      document.getElementById('lbl-img-idx').textContent = trans.formImgIdx;
+      document.getElementById('lbl-service-type').textContent = trans.formService;
+      document.getElementById('lbl-heavy-load').textContent = trans.formHeavy;
+      document.getElementById('lbl-is-approved').textContent = trans.formApproved;
+      document.getElementById('lbl-prod-desc').textContent = trans.formDesc;
+      document.getElementById('lbl-user-msg').textContent = trans.formUserMsg;
+      document.getElementById('lbl-user-note').textContent = trans.formUserNote;
+
+      document.getElementById('cancel-form-btn').textContent = trans.btnCancel;
+      document.getElementById('save-form-btn').textContent = trans.btnConfirm;
+
+      // Rating form labels
+      document.getElementById('lbl-add-review').textContent = trans.addReview;
+      document.getElementById('lbl-rating-actor').textContent = trans.lblActor;
+      document.getElementById('lbl-rating-actor-key').textContent = trans.lblActorKey;
+      document.getElementById('lbl-rating-score').textContent = trans.lblStars;
+      document.getElementById('lbl-rating-note').textContent = trans.lblNote;
+      document.getElementById('save-rating-btn').textContent = trans.btnAddReviewSubmit;
+    }
+
+    // Toggle Loading Spinner Overlay
+    function setLoader(visible) {
+      if (visible) el.loadingSpinner.classList.add('active');
+      else el.loadingSpinner.classList.remove('active');
+    }
+
+    // Trigger Toast Notification on bottom left/right
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      el.toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+
+    // Fetch and load everything
+    async function loadDashboardData() {
+      setLoader(true);
+      try {
+        state.products = await getProducts();
+        updateStats();
+        renderProducts();
+      } catch (err) {
+        showToast(TRANSLATIONS[state.currentLanguage].loadError, 'error');
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    // Calculate and display top KPI statistics
+    function updateStats() {
+      const total = state.products.length;
+      const approved = state.products.filter(p => p.is_approved === 1 || p.is_approved === true).length;
+      const outOfStock = state.products.filter(p => p.product_quantity <= 0).length;
+      
+      const maxPrice = state.products.reduce((max, p) => p.product_price > max ? p.product_price : max, 0);
+
+      el.statTotal.textContent = total;
+      el.statApproved.textContent = approved;
+      el.statOutOfStock.textContent = outOfStock;
+      el.statHighestPrice.textContent = `${maxPrice.toLocaleString()} EGP`;
+    }
+
+    // Render list of filtered products
+    function renderProducts() {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      const query = el.searchInput.value.toLowerCase().trim();
+      const selectedCategory = el.categoryFilter.value;
+      const selectedApproval = el.approvedFilter.value;
+      const sortBy = el.sortSelect.value;
+
+      // Filter
+      let filtered = state.products.filter(product => {
+        // Search text matching
+        const matchesSearch = 
+          product.productName.toLowerCase().includes(query) ||
+          (product.product_description || "").toLowerCase().includes(query) ||
+          product.product_key.toLowerCase().includes(query);
+          
+        // Category matching
+        const matchesCategory = selectedCategory === "" || String(product.MainCategory) === selectedCategory;
+        
+        // Approval status matching
+        const isApprovedVal = product.is_approved === 1 || product.is_approved === true;
+        const matchesApproval = 
+          selectedApproval === "" || 
+          (selectedApproval === "approved" && isApprovedVal) ||
+          (selectedApproval === "pending" && !isApprovedVal);
+
+        return matchesSearch && matchesCategory && matchesApproval;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        if (sortBy === 'price-asc') return a.product_price - b.product_price;
+        if (sortBy === 'price-desc') return b.product_price - a.product_price;
+        if (sortBy === 'quantity-desc') return b.product_quantity - a.product_quantity;
+        if (sortBy === 'name-asc') return a.productName.localeCompare(b.productName);
+        return 0;
+      });
+
+      // Render Cards
+      el.productsContainer.innerHTML = "";
+      if (filtered.length === 0) {
+        el.productsContainer.innerHTML = `
+          <div class="glass-panel" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
+            <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem; opacity: 0.5;">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <p>${state.currentLanguage === 'ar' ? 'لم يتم العثور على أي منتجات مطابقة.' : 'No matching products found.'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(product => {
+        const isApproved = product.is_approved === 1 || product.is_approved === true;
+        const categoryData = CATEGORIES[product.MainCategory] || { en: "Other", ar: "أخرى", icon: "📦" };
+        const categoryName = state.currentLanguage === 'ar' ? categoryData.ar : categoryData.en;
+        const isOutOfStock = product.product_quantity <= 0;
+
+        // Image resolving: fetch first image from R2 server if defined
+        let imgSrc = "";
+        if (product.ImageName) {
+          const firstImage = product.ImageName.split(',')[0].trim();
+          imgSrc = `${R2_BASE}/${firstImage}`;
+        }
+
+        const card = document.createElement('div');
+        card.className = "product-card glass-panel";
+        
+        // Direct Event Listener instead of inline HTML JS handlers to follow clean modern ES modules standard
+        card.addEventListener('click', (e) => {
+          // Prevent modal opening when clicking buttons
+          if (e.target.closest('.btn') || e.target.closest('button')) return;
+        });
+
+        // Set card structure
+        card.innerHTML = `
+          <div class="product-image-container">
+            ${imgSrc ? `
+              <img src="${imgSrc}" class="product-img" alt="${product.productName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="no-image-placeholder" style="display:none;">
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                <span style="font-size: 0.75rem;">${categoryName}</span>
+              </div>
+            ` : `
+              <div class="no-image-placeholder">
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                <span style="font-size: 0.75rem;">${categoryName}</span>
+              </div>
+            `}
+            <span class="status-badge ${isApproved ? 'status-approved' : 'status-pending'}">
+              ${isApproved ? trans.approved : trans.pending}
+            </span>
+          </div>
+
+          <div class="product-content">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+              ${categoryData.icon} ${categoryName} | <span style="font-family: monospace;">${product.product_key}</span>
+            </div>
+            <h4 class="product-title" title="${product.productName}">${product.productName}</h4>
+            <p class="product-desc">${product.product_description || '...'}</p>
+
+            <div class="product-meta-row">
+              <div class="product-price-section">
+                <span class="price-label">${trans.price}</span>
+                <div>
+                  <span class="product-price">${product.product_price} EGP</span>
+                  ${product.original_price && product.original_price > product.product_price ? `
+                    <span class="original-price-strike">${product.original_price} EGP</span>
+                  ` : ''}
+                </div>
+              </div>
+              <span class="product-stock ${isOutOfStock ? 'out-of-stock' : ''}">
+                ${isOutOfStock ? trans.outOfStock : `${trans.stock}: ${product.product_quantity}`}
+              </span>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions">
+              <button class="btn btn-secondary btn-edit-card" style="padding: 0.5rem;" title="${trans.editProduct}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+              </button>
+              <button class="btn btn-secondary btn-ratings-card" style="padding: 0.5rem; background: rgba(255, 167, 38, 0.1); border-color: rgba(255, 167, 38, 0.2);" title="${trans.ratingsTitle}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFA726">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+              </button>
+              <button class="btn btn-danger btn-delete-card" style="padding: 0.5rem;" title="${trans.deleteConfirm}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Bind interactive event handlers safely inside module context
+        card.querySelector('.btn-edit-card').addEventListener('click', () => openProductModal(product));
+        card.querySelector('.btn-ratings-card').addEventListener('click', () => openRatingsModal(product));
+        card.querySelector('.btn-delete-card').addEventListener('click', () => handleDeleteProduct(product.product_key));
+
+        el.productsContainer.appendChild(card);
+      });
+    }
+
+    // Modal Control: Open Add/Edit Dialog
+    function openProductModal(product = null) {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      state.activeProduct = product;
+      el.productForm.reset();
+
+      if (product) {
+        // Edit Mode
+        el.modalTitleText.textContent = trans.editProduct;
+        document.getElementById('form-product_key').value = product.product_key;
+        document.getElementById('form-product_key').disabled = true; // Key should be immutable
+        
+        document.getElementById('form-productName').value = product.productName || "";
+        document.getElementById('form-user_key').value = product.user_key || "";
+        document.getElementById('form-product_description').value = product.product_description || "";
+        document.getElementById('form-product_price').value = product.product_price || 0;
+        document.getElementById('form-product_quantity').value = product.product_quantity || 0;
+        document.getElementById('form-user_message').value = product.user_message || "";
+        document.getElementById('form-user_note').value = product.user_note || "";
+        document.getElementById('form-ImageName').value = product.ImageName || "";
+        document.getElementById('form-MainCategory').value = product.MainCategory || 1;
+        document.getElementById('form-SubCategory').value = product.SubCategory || 1;
+        document.getElementById('form-ImageIndex').value = product.ImageIndex || 1;
+        document.getElementById('form-original_price').value = product.original_price || "";
+        document.getElementById('form-serviceType').value = product.serviceType || 0;
+        document.getElementById('form-realPrice').value = product.realPrice || "";
+        document.getElementById('form-heavyLoad').value = product.heavyLoad || 0;
+        document.getElementById('form-is_approved').checked = product.is_approved === 1 || product.is_approved === true;
+      } else {
+        // Add Mode
+        el.modalTitleText.textContent = trans.addProduct;
+        document.getElementById('form-product_key').value = "";
+        document.getElementById('form-product_key').disabled = false;
+        
+        // Set basic default credentials
+        document.getElementById('form-user_key').value = "qy79r49s"; // Default merchant key
+        document.getElementById('form-SubCategory').value = "1";
+        document.getElementById('form-ImageIndex').value = "1";
+        document.getElementById('form-serviceType').value = "0";
+        document.getElementById('form-heavyLoad').value = "0";
+        document.getElementById('form-is_approved').checked = true;
+      }
+
+      el.productModal.classList.add('active');
+    }
+
+    function closeProductModal() {
+      el.productModal.classList.remove('active');
+      state.activeProduct = null;
+    }
+
+    // Modal Control: Save form input handler
+    async function handleProductSubmit() {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      
+      const productKey = document.getElementById('form-product_key').value.trim();
+      if (!productKey) return;
+
+      const updatedData = {
+        productName: document.getElementById('form-productName').value.trim(),
+        product_key: productKey,
+        user_key: document.getElementById('form-user_key').value.trim(),
+        product_description: document.getElementById('form-product_description').value.trim(),
+        product_price: parseFloat(document.getElementById('form-product_price').value),
+        product_quantity: parseInt(document.getElementById('form-product_quantity').value, 10),
+        user_message: document.getElementById('form-user_message').value.trim(),
+        user_note: document.getElementById('form-user_note').value.trim(),
+        ImageName: document.getElementById('form-ImageName').value.trim(),
+        MainCategory: parseInt(document.getElementById('form-MainCategory').value, 10),
+        SubCategory: parseInt(document.getElementById('form-SubCategory').value, 10),
+        ImageIndex: parseInt(document.getElementById('form-ImageIndex').value, 10),
+        original_price: document.getElementById('form-original_price').value ? parseFloat(document.getElementById('form-original_price').value) : null,
+        serviceType: parseInt(document.getElementById('form-serviceType').value, 10),
+        is_approved: document.getElementById('form-is_approved').checked,
+        realPrice: document.getElementById('form-realPrice').value ? parseFloat(document.getElementById('form-realPrice').value) : null,
+        heavyLoad: parseFloat(document.getElementById('form-heavyLoad').value || 0)
+      };
+
+      // ID preserves if editing
+      if (state.activeProduct) {
+        updatedData.id = state.activeProduct.id;
+      } else {
+        // Auto assign ID sequence
+        const maxId = state.products.reduce((max, p) => p.id > max ? p.id : max, 250);
+        updatedData.id = maxId + 1;
+      }
+
+      setLoader(true);
+      try {
+        const saved = await saveProduct(updatedData);
+        showToast(trans.saveSuccess);
+        closeProductModal();
+        await loadDashboardData();
+      } catch (err) {
+        showToast(trans.saveError, 'error');
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    // Modal Control: Delete confirm handler
+    async function handleDeleteProduct(productKey) {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      if (!confirm(trans.deleteConfirm)) return;
+
+      setLoader(true);
+      try {
+        await deleteProduct(productKey);
+        showToast(trans.deleteSuccess);
+        await loadDashboardData();
+      } catch (err) {
+        showToast(trans.deleteError, 'error');
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    // Ratings Modal: Open review panel
+    async function openRatingsModal(product) {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      state.activeProduct = product;
+      
+      document.getElementById('ratings-modal-title').textContent = `${trans.ratingsTitle}: ${product.productName}`;
+      el.ratingForm.reset();
+      updateStarSelection(5); // default star
+
+      // Generate a default actor user key to ease testing
+      document.getElementById('rating-actor-user-key').value = `actor_${Math.random().toString(36).substr(2, 5)}`;
+      
+      el.ratingsModal.classList.add('active');
+      await loadRatingsData(product.product_key);
+    }
+
+    function closeRatingsModal() {
+      el.ratingsModal.classList.remove('active');
+      state.activeProduct = null;
+    }
+
+    // Load and render ratings for active product
+    async function loadRatingsData(productKey) {
+      el.modalRatingsList.innerHTML = `<div style="text-align:center; padding: 1.5rem; color:var(--text-muted);">${state.currentLanguage === 'ar' ? 'جاري تحميل التقييمات...' : 'Loading ratings...'}</div>`;
+      
+      try {
+        const ratings = await getProductRatings(productKey);
+        el.modalRatingsList.innerHTML = "";
+
+        if (ratings.length === 0) {
+          el.modalRatingsList.innerHTML = `<div class="no-ratings-text">${TRANSLATIONS[state.currentLanguage].noRatings}</div>`;
+          return;
+        }
+
+        ratings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        ratings.forEach(rating => {
+          const dateStr = new Date(rating.created_at).toLocaleDateString(state.currentLanguage === 'ar' ? 'ar-EG' : 'en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+          });
+
+          const item = document.createElement('div');
+          item.className = "rating-item";
+          item.innerHTML = `
+            <div class="rating-header-row">
+              <span class="rating-user">${rating.actor_name || 'مشتري مجهول'}</span>
+              <span class="rating-stars">${'★'.repeat(rating.rating)}${'☆'.repeat(5 - rating.rating)}</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              ${dateStr} | Key: <span style="font-family:monospace;">${rating.actor_user_key}</span>
+            </div>
+            <p class="rating-note">${rating.note || 'لا يوجد تعليق.'}</p>
+          `;
+          el.modalRatingsList.appendChild(item);
+        });
+      } catch (err) {
+        el.modalRatingsList.innerHTML = `<div style="text-align:center; padding: 1.5rem; color:#FF5252;">${TRANSLATIONS[state.currentLanguage].loadError}</div>`;
+      }
+    }
+
+    // Star UI interaction helper
+    function updateStarSelection(value) {
+      state.selectedRatingScore = value;
+      el.starOptions.forEach(star => {
+        const starValue = parseInt(star.getAttribute('data-value'), 10);
+        if (starValue <= value) {
+          star.classList.add('selected');
+        } else {
+          star.classList.remove('selected');
+        }
+      });
+    }
+
+    // Ratings Modal: Save new review handler
+    async function handleRatingSubmit() {
+      const trans = TRANSLATIONS[state.currentLanguage];
+      if (!state.activeProduct) return;
+
+      const ratingData = {
+        product_key: state.activeProduct.product_key,
+        actor_name: document.getElementById('rating-actor-name').value.trim(),
+        actor_user_key: document.getElementById('rating-actor-user-key').value.trim(),
+        rating: state.selectedRatingScore,
+        note: document.getElementById('rating-note').value.trim()
+      };
+
+      setLoader(true);
+      try {
+        await addProductRating(ratingData);
+        showToast(trans.ratingSuccess);
+        el.ratingForm.reset();
+        updateStarSelection(5);
+        
+        // Refresh ratings view list
+        await loadRatingsData(state.activeProduct.product_key);
+      } catch (err) {
+        showToast(trans.saveError, 'error');
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    // Boot the application
+    init();
+  </script>
+
+</body>
+</html>

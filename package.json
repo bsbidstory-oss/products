@@ -1,0 +1,14 @@
+{
+  "name": "products-dashboard",
+  "version": "1.0.0",
+  "description": "Suez Bazaar products dashboard and REST API migration tool",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "migrate": "node migrate.js",
+    "start": "npx local-server ."
+  },
+  "keywords": [],
+  "author": "Antigravity",
+  "license": "ISC"
+}
