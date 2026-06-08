@@ -13,7 +13,8 @@
     "indexes:deploy:cli": "npx firebase-tools deploy --only firestore:indexes --project products-ecbb1",
     "rules:deploy": "npx firebase-tools deploy --only firestore:rules --project products-ecbb1",
     "firestore:deploy": "npx firebase-tools deploy --only firestore --project products-ecbb1",
-    "firebase:login": "npx firebase-tools login"
+    "firebase:login": "npx firebase-tools login",
+    "firebase:logout": "npx firebase-tools logout"
   },
   "keywords": [],
   "author": "Antigravity",

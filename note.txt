@@ -7,3 +7,14 @@ C:\Users\hesham\Desktop\products
  
 
 Deploy keys  Title=product Key=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYRTzRlbkP7LCZyWqDGOmvvlf4OdAOSTIuqzc1xj+X4 product
+
+Firebase Account: bs.bid.story@gmail.com
+Firebase Project: products-ecbb1
+
+Firebase Commands:
+- npm run firebase:login    # Login with bs.bid.story@gmail.com
+- npm run firebase:logout   # Logout from current account
+- npm run indexes:deploy     # Deploy Firestore indexes
+- npm run indexes:list       # List current indexes
+- npm run db:backup          # Backup database to local_db/
+
