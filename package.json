@@ -6,9 +6,19 @@
   "type": "module",
   "scripts": {
     "migrate": "node migrate.js",
-    "start": "npx local-server ."
+    "start": "npx local-server .",
+    "db:backup": "node backup.js",
+    "indexes:deploy": "node deploy-indexes.js",
+    "indexes:list": "node deploy-indexes.js --list",
+    "indexes:deploy:cli": "npx firebase-tools deploy --only firestore:indexes --project products-ecbb1",
+    "rules:deploy": "npx firebase-tools deploy --only firestore:rules --project products-ecbb1",
+    "firestore:deploy": "npx firebase-tools deploy --only firestore --project products-ecbb1",
+    "firebase:login": "npx firebase-tools login"
   },
   "keywords": [],
   "author": "Antigravity",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^12.13.0"
+  }
 }

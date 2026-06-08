@@ -1,0 +1,17 @@
+{
+  "project_id": "products-ecbb1",
+  "backup_time": "2026-06-08T07:19:47.280Z",
+  "collections": {
+    "marketplace_products": {
+      "count": 44,
+      "elapsed_sec": 1.7
+    },
+    "product_ratings_v2": {
+      "count": 1,
+      "elapsed_sec": 0.3
+    }
+  },
+  "total_docs": 45,
+  "errors": [],
+  "total_elapsed_sec": 2.9
+}
